@@ -19,8 +19,25 @@ namespace FeiniuBus.AspNetCore.Json
             
             Default.Converters.Add(new StringEnumConverter());
             Default.Converters.Add(new IdConverter());
+            
+            FrontEnd = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Include,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                DateFormatHandling = DateFormatHandling.IsoDateFormat,
+                DateFormatString = "yyyy'-'MM'-'dd' 'HH':'mm':'ss",
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            };
+            
+            FrontEnd.Converters.Add(new StringEnumConverter());
+            FrontEnd.Converters.Add(new IdConverter());
         }
         
         public static JsonSerializerSettings Default { get; }
+        
+        /// <summary>
+        /// 返回给前端用这个设置
+        /// </summary>
+        public static JsonSerializerSettings FrontEnd { get; }
     }
 }
