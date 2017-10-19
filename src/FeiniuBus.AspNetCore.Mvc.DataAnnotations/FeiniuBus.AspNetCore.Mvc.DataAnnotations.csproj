@@ -1,6 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>2.0.0</Version>
+    <Authors>FeiniuBus</Authors>
+    <Company>FeiniuBus Corporation.</Company>
+    <Product>FeiniuBus</Product>
+    <Description>ASP.NET Core MVC DataAnnotations</Description>
+    <Copyright>© FeiniuBus Corporation. All rights reserved.</Copyright>
+    <PackageIconUrl>https://s3.cn-north-1.amazonaws.com.cn/nuget-icons/icon175x175.jpeg</PackageIconUrl>
+    <PackageLicenseUrl>https://github.com/FeiniuBus/BasicComponent/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/FeiniuBus/BasicComponent</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/FeiniuBus/BasicComponent.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>aspnetcore</PackageTags>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.0" />
