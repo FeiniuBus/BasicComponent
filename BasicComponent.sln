@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeiniuBus.AspNetCore.NLog",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeiniuBus.AspNetCore.Logging", "src\FeiniuBus.AspNetCore.Logging\FeiniuBus.AspNetCore.Logging.csproj", "{67986325-C418-43E8-A4A0-3C588A478C58}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeiniuBus.AspNetCore.Mvc.Formatters.Json", "src\FeiniuBus.AspNetCore.Mvc.Formatters.Json\FeiniuBus.AspNetCore.Mvc.Formatters.Json.csproj", "{79B81B31-4BC1-45B1-847B-29C8AC00E140}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{67986325-C418-43E8-A4A0-3C588A478C58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67986325-C418-43E8-A4A0-3C588A478C58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67986325-C418-43E8-A4A0-3C588A478C58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79B81B31-4BC1-45B1-847B-29C8AC00E140}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79B81B31-4BC1-45B1-847B-29C8AC00E140}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79B81B31-4BC1-45B1-847B-29C8AC00E140}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79B81B31-4BC1-45B1-847B-29C8AC00E140}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
