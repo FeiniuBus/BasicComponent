@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\FeiniuBus.AspNetCore.Mvc.DataAnnotations\FeiniuBus.AspNetCore.Mvc.DataAnnotations.csproj" />
     <ProjectReference Include="..\..\src\FeiniuBus.AspNetCore.Mvc.Formatters.Json\FeiniuBus.AspNetCore.Mvc.Formatters.Json.csproj" />
   </ItemGroup>
 
