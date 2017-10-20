@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeiniuBus.AspNetCore.Buffer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeiniuBus.AspNetCore.Mvc.Test", "test\FeiniuBus.AspNetCore.Mvc.Test\FeiniuBus.AspNetCore.Mvc.Test.csproj", "{1F460E7E-3F32-4401-AF7E-11AAC71226F7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeiniuBus.AspNetCore.Logging.Test", "test\FeiniuBus.AspNetCore.Logging.Test\FeiniuBus.AspNetCore.Logging.Test.csproj", "{6F0EEF39-B4E5-45F4-8169-0E048839EDC5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{1F460E7E-3F32-4401-AF7E-11AAC71226F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F460E7E-3F32-4401-AF7E-11AAC71226F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F460E7E-3F32-4401-AF7E-11AAC71226F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F0EEF39-B4E5-45F4-8169-0E048839EDC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F0EEF39-B4E5-45F4-8169-0E048839EDC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F0EEF39-B4E5-45F4-8169-0E048839EDC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F0EEF39-B4E5-45F4-8169-0E048839EDC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,6 +72,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{10181AF7-2773-4C93-991B-A81D17FCCD08} = {3A73B29F-8AA0-4C3D-A865-C0801092345A}
 		{1F460E7E-3F32-4401-AF7E-11AAC71226F7} = {3A73B29F-8AA0-4C3D-A865-C0801092345A}
+		{6F0EEF39-B4E5-45F4-8169-0E048839EDC5} = {3A73B29F-8AA0-4C3D-A865-C0801092345A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7E29593C-55CB-47B0-AFF0-8926A952CE5A}

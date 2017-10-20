@@ -18,6 +18,11 @@ namespace FeiniuBus.AspNetCore.NLog
                 throw new ArgumentNullException(nameof(configFile));
             }
 
+            if (File.Exists(configFile))
+            {
+                return NLogBuilder.ConfigureNLog(configFile);
+            }
+
             var filePath = ResolveSharedFileLocation(configFile);
             if (string.IsNullOrEmpty(filePath))
             {
