@@ -31,6 +31,18 @@ namespace FeiniuBus.AspNetCore.Json
             
             FrontEnd.Converters.Add(new StringEnumConverter());
             FrontEnd.Converters.Add(new IdConverter());
+            
+            GoInteraction = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                DateFormatHandling = DateFormatHandling.IsoDateFormat,
+                DateFormatString = "yyyyMMddTHHmmssZ",
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            };
+            
+            GoInteraction.Converters.Add(new StringEnumConverter());
+            GoInteraction.Converters.Add(new IdConverter());
         }
         
         public static JsonSerializerSettings Default { get; }
@@ -39,5 +51,7 @@ namespace FeiniuBus.AspNetCore.Json
         /// 返回给前端用这个设置
         /// </summary>
         public static JsonSerializerSettings FrontEnd { get; }
+        
+        public static JsonSerializerSettings GoInteraction { get; }
     }
 }
