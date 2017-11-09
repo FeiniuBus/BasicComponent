@@ -13,7 +13,7 @@ namespace FeiniuBus.AspNetCore.Logging.Test
         [Fact]
         public void NLogTest()
         {
-            var logger = NLogSharedBuilder.ConfigureNLog().GetCurrentClassLogger();
+            var logger = NLogSharedBuilder.ConfigureNLog("FeiniuBusNLogTest").GetCurrentClassLogger();
             Assert.IsType<MicrosoftNLog.Logger>(logger);
 
             WebHost.CreateDefaultBuilder().UseFeiniuBusNLog().Configure(app =>

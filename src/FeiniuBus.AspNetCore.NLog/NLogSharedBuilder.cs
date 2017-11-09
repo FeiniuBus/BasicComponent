@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using NLog;
+using NLog.Config;
 using NLog.Web;
 
 namespace FeiniuBus.AspNetCore.NLog
@@ -11,25 +12,27 @@ namespace FeiniuBus.AspNetCore.NLog
         private static readonly string[] PotentialEnvironmentPaths = {"HOME", "USERPROFILE"};
         private const string DefaultSharedFileLocation = ".feiniubus";
 
-        public static LogFactory ConfigureNLog(string configFile = DefaultNLogConfigFile)
+        public static LogFactory ConfigureNLog(string application, string configFile = DefaultNLogConfigFile)
         {
             if (string.IsNullOrEmpty(configFile))
             {
                 throw new ArgumentNullException(nameof(configFile));
             }
 
-            if (File.Exists(configFile))
+            var file = configFile;
+            if (!File.Exists(file))
             {
-                return NLogBuilder.ConfigureNLog(configFile);
+                file = ResolveSharedFileLocation(configFile);
+                if (string.IsNullOrEmpty(file))
+                {
+                    throw new FileNotFoundException("File not exists.", file);
+                }
             }
 
-            var filePath = ResolveSharedFileLocation(configFile);
-            if (string.IsNullOrEmpty(filePath))
-            {
-                throw new FileNotFoundException("File not exists.", filePath);
-            }
+            var configuration = new XmlLoggingConfiguration(file);
+            configuration.Variables["FeiniuBus-Application"] = application;
 
-            return NLogBuilder.ConfigureNLog(filePath);
+            return NLogBuilder.ConfigureNLog(configuration);
         }
 
         private static string ResolveSharedFileLocation(string filename)
