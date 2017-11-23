@@ -1,0 +1,10 @@
+<Project>
+
+  <PropertyGroup>
+    <Product>FeiniuBus ASP.NET Core</Product>
+    <RepositoryUrl>https://github.com/FeiniuBus/BasicComponent</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+</Project>

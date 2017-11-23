@@ -12,6 +12,7 @@ YELLOW="\033[0;33m"
 MAGENTA="\033[0;95m"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 [ -z "${DOTNET_HOME:-}" ] && DOTNET_HOME="$HOME/.dotnet"
+config_file="$DIR/korebuild.json"
 verbose=false
 update=false
 repo_path="$DIR"
@@ -22,20 +23,19 @@ tools_source=''
 # Functions
 #
 __usage() {
-    echo "Usage: $(basename "${BASH_SOURCE[0]}") command [options] [[--] <Arguments>...]"
+    echo "Usage: $(basename "${BASH_SOURCE[0]}") [options] [[--] <MSBUILD_ARG>...]"
     echo ""
     echo "Arguments:"
-    echo "    command                The command to be run."
-    echo "    <Arguments>...         Arguments passed to the command. Variable number of arguments allowed."
+    echo "    <MSBUILD_ARG>...         Arguments passed to MSBuild. Variable number of arguments allowed."
     echo ""
     echo "Options:"
-    echo "    --verbose                                 Show verbose output."
-    echo "    -c|--channel <CHANNEL>                    The channel of KoreBuild to download. Overrides the value from the config file.."
-    echo "    --config-file <FILE>                      The path to the configuration file that stores values. Defaults to korebuild.json."
-    echo "    -d|--dotnet-home <DIR>                    The directory where .NET Core tools will be stored. Defaults to '\$DOTNET_HOME' or '\$HOME/.dotnet."
-    echo "    --path <PATH>                             The directory to build. Defaults to the directory containing the script."
-    echo "    -s|--tools-source|-ToolsSource <URL>      The base url where build tools can be downloaded. Overrides the value from the config file."
-    echo "    -u|--update                               Update to the latest KoreBuild even if the lock file is present."
+    echo "    --verbose                Show verbose output."
+    echo "    -c|--channel <CHANNEL>   The channel of KoreBuild to download. Overrides the value from the config file.."
+    echo "    --config-file <FILE>     The path to the configuration file that stores values. Defaults to korebuild.json."
+    echo "    -d|--dotnet-home <DIR>   The directory where .NET Core tools will be stored. Defaults to '\$DOTNET_HOME' or '\$HOME/.dotnet."
+    echo "    --path <PATH>            The directory to build. Defaults to the directory containing the script."
+    echo "    -s|--tools-source <URL>  The base url where build tools can be downloaded. Overrides the value from the config file."
+    echo "    -u|--update              Update to the latest KoreBuild even if the lock file is present."
     echo ""
     echo "Description:"
     echo "    This function will create a file \$DIR/korebuild-lock.txt. This lock file can be committed to source, but does not have to be."
@@ -125,9 +125,6 @@ __get_remote_file() {
 #
 # main
 #
-
-command="${1:-}"
-shift
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -219,5 +216,5 @@ fi
 [ -z "$tools_source" ] && tools_source='https://aspnetcore.blob.core.windows.net/buildtools'
 
 get_korebuild
-set_korebuildsettings "$tools_source" "$DOTNET_HOME" "$repo_path" "$config_file"
-invoke_korebuild_command "$command" "$@"
+install_tools "$tools_source" "$DOTNET_HOME"
+invoke_repository_build "$repo_path" "$@"

@@ -1,0 +1,17 @@
+<Project>
+  <PropertyGroup>
+    <MicrosoftAspNetCoreHttpAbstractionsPackageVersion>2.0.1</MicrosoftAspNetCoreHttpAbstractionsPackageVersion>
+    <SystemBuffersPackageVersion>4.4.0</SystemBuffersPackageVersion>
+    <NewtonsoftJsonPackageVersion>10.0.3</NewtonsoftJsonPackageVersion>
+    <MicrosoftAspNetCoreHttpExtensionsPackageVersion>2.0.1</MicrosoftAspNetCoreHttpExtensionsPackageVersion>
+    <MicrosoftExtensionsLoggingAbstractionsPackageVersion>2.0.0</MicrosoftExtensionsLoggingAbstractionsPackageVersion>
+    <SystemComponentModelAnnotationsPackageVersion>4.4.0</SystemComponentModelAnnotationsPackageVersion>
+    <MicrosoftAspNetCoreMvcFormattersJsonPackageVersion>2.0.1</MicrosoftAspNetCoreMvcFormattersJsonPackageVersion>
+    <NLogWebAspNetCorePackageVersion>4.5.0-beta04</NLogWebAspNetCorePackageVersion>
+    <MicrosoftAspNetCoreTestHostPackageVersion>2.0.1</MicrosoftAspNetCoreTestHostPackageVersion>
+    <MicrosoftAspNetCoreAllPackageVersion>2.0.3</MicrosoftAspNetCoreAllPackageVersion>
+    <MicrosoftNETTestSdkPackageVersion>15.5.0</MicrosoftNETTestSdkPackageVersion>
+    <XunitPackageVersion>2.3.1</XunitPackageVersion>
+    <XunitRunnerVisualStudioPackageVersion>2.3.1</XunitRunnerVisualStudioPackageVersion>
+  </PropertyGroup>
+</Project>
