@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace FeiniuBus.AspNetCore.Buffering
 {
@@ -24,8 +25,25 @@ namespace FeiniuBus.AspNetCore.Buffering
                 return;
             }
 
-            context.Request.EnableRewind(DefaultMemoryBufferThreshold, DefaultBufferBodyLengthLimit);
-            await _next(context);
+            var originalBufferingFeature = context.Features.Get<IHttpBufferingFeature>();
+            try
+            {
+                var stream = new BufferingReadStream(originalRequestBody, DefaultMemoryBufferThreshold,
+                    DefaultBufferBodyLengthLimit, BufferingHelper.TempDirectory);
+                context.Request.Body = stream;
+                context.Response.RegisterForDispose(stream);
+                
+                if (originalBufferingFeature != null)
+                {
+                    context.Features.Set<IHttpBufferingFeature>(new HttpBufferingFeature(stream, originalBufferingFeature));
+                }
+                await _next(context);
+            }
+            finally
+            {
+                context.Features.Set(originalBufferingFeature);
+                context.Request.Body = originalRequestBody;
+            }
         }
     }
 }

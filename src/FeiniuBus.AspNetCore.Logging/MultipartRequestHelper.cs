@@ -1,13 +1,18 @@
 ﻿using System;
+using Microsoft.Net.Http.Headers;
 
 namespace FeiniuBus.AspNetCore.Logging
 {
     internal static class MultipartRequestHelper
     {
-        public static bool IsMultipartContentType(string contentType)
+        public static bool HasMultipartFormContentType(string contentType)
         {
-            return !string.IsNullOrEmpty(contentType) &&
-                   contentType.IndexOf("multipart/", StringComparison.OrdinalIgnoreCase) >= 0;
+            if (MediaTypeHeaderValue.TryParse(contentType, out var value))
+            {
+                return contentType != null && value.MediaType.Equals("multipart/form-data", StringComparison.OrdinalIgnoreCase);
+            }
+
+            return false;
         }
     }
 }

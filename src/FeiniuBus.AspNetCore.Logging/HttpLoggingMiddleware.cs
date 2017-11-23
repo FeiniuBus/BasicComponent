@@ -21,33 +21,39 @@ namespace FeiniuBus.AspNetCore.Logging
 
         public async Task Invoke(HttpContext context)
         {
-            if (!MultipartRequestHelper.IsMultipartContentType(context.Request.ContentType))
+            if (!MultipartRequestHelper.HasMultipartFormContentType(context.Request.ContentType))
             {
                 if (_logger != null && _logger.IsEnabled(LogLevel.Information))
                 {
-                    var builder = new StringBuilder();
-                    var uri = context.Request.GetDisplayUrl();
-                    builder.AppendFormat("RequestUri: {0}{1}", uri, Environment.NewLine);
-                    builder.AppendFormat("HttpMethod: {0}", context.Request.Method);
-
-                    if (context.Request.QueryString.HasValue)
+                    try
                     {
-                        builder.AppendFormat("{1}QueryString: {0}", context.Request.QueryString.ToUriComponent(),
-                            Environment.NewLine);
-                    }
+                        var builder = new StringBuilder();
+                        var uri = context.Request.GetDisplayUrl();
+                        builder.AppendFormat("RequestUri: {0}{1}", uri, Environment.NewLine);
+                        builder.AppendFormat("HttpMethod: {0}", context.Request.Method);
 
-                    if (MayContainRequestBody(context.Request))
-                    {
-                        if (context.Request.Body.CanSeek)
+                        if (context.Request.QueryString.HasValue)
                         {
-                            var reader = new StreamReader(context.Request.Body);
-                            var body = await reader.ReadToEndAsync().ConfigureAwait(false);
-                            builder.AppendFormat("{1}RequestBody: {0}", body, Environment.NewLine);
-                            context.Request.Body.Seek(0, SeekOrigin.Begin);
+                            builder.AppendFormat("{1}QueryString: {0}", context.Request.QueryString.ToUriComponent(),
+                                Environment.NewLine);
                         }
-                    }
+
+                        if (MayContainRequestBody(context.Request))
+                        {
+                            if (context.Request.Body.CanSeek)
+                            {
+                                var reader = new StreamReader(context.Request.Body);
+                                var body = await reader.ReadToEndAsync().ConfigureAwait(false);
+                                builder.AppendFormat("{1}RequestBody: {0}", body, Environment.NewLine);
+                            }
+                        }
                     
-                    _logger.LogInformation(builder.ToString());
+                        _logger.LogInformation(builder.ToString());
+                    }
+                    finally
+                    {
+                        context.Request.Body.Seek(0, SeekOrigin.Begin);
+                    }
                 }
             }
 
