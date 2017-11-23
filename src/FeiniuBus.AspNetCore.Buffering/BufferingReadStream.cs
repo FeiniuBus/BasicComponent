@@ -251,7 +251,7 @@ namespace FeiniuBus.AspNetCore.Buffering
                     throw new NotSupportedException("The content has not been fully buffered yet.");
                 }
 
-                _buffer.Seek(offset, origin);
+                return _buffer.Seek(offset, origin);
             }
             return _innerStream.Seek(offset, origin);
         }
