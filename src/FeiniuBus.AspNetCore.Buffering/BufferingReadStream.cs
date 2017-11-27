@@ -18,6 +18,7 @@ namespace FeiniuBus.AspNetCore.Buffering
 
         private Stream _buffer;
         private bool _completelyBuffered;
+        private bool _inMemory = true;
         private bool _disposed;
         private byte[] _rentedBuffer;
         private string _tempFileDirectory;
@@ -85,39 +86,20 @@ namespace FeiniuBus.AspNetCore.Buffering
             _tempFileDirectory = tempFileDirectory;
         }
 
-        public bool IsBuffering { get; private set; } = true;
-
         public string TempFileName { get; private set; }
-
-        public override bool CanRead => _innerStream.CanRead;
-        public override bool CanSeek => IsBuffering;
+        public bool InMemory => _inMemory;
+        public override bool CanRead => true;
+        public override bool CanSeek => true;
         public override bool CanWrite => false;
-
-        public override long Length
-        {
-            get
-            {
-                if (IsBuffering)
-                    return _buffer.Length;
-                return _innerStream.Length;
-            }
-        }
+        public override long Length => _buffer.Length;
 
         public override long Position
         {
-            get
-            {
-                if (IsBuffering)
-                    return _buffer.Position;
-                return _innerStream.Position;
-            }
+            get => _buffer.Position;
             set
             {
                 ThrowIfDisposed();
-                if (IsBuffering)
-                    _buffer.Position = value;
-                else
-                    _innerStream.Position = value;
+                _buffer.Position = value;
             }
         }
 
@@ -141,9 +123,9 @@ namespace FeiniuBus.AspNetCore.Buffering
                 throw new IOException("Buffer limit exceeded.");
             }
 
-            if (IsBuffering && _buffer.Length + read > _memoryThreshold)
+            if (_inMemory && _buffer.Length + read > _memoryThreshold)
             {
-                IsBuffering = false;
+                _inMemory = false;
                 var oldBuffer = _buffer;
                 _buffer = CreateTempFile();
                 if (_rentedBuffer == null)
@@ -195,9 +177,9 @@ namespace FeiniuBus.AspNetCore.Buffering
                 throw new IOException("Buffer limit exceeded.");
             }
 
-            if (IsBuffering && _buffer.Length + read > _memoryThreshold)
+            if (_inMemory && _buffer.Length + read > _memoryThreshold)
             {
-                IsBuffering = false;
+                _inMemory = false;
                 var oldBuffer = _buffer;
                 _buffer = CreateTempFile();
                 if (_rentedBuffer == null)
@@ -236,44 +218,25 @@ namespace FeiniuBus.AspNetCore.Buffering
         public override long Seek(long offset, SeekOrigin origin)
         {
             ThrowIfDisposed();
-            if (IsBuffering)
+            if (!_completelyBuffered && origin == SeekOrigin.End)
             {
-                if (!_completelyBuffered && origin == SeekOrigin.End)
-                {
-                    throw new NotSupportedException("The content has not been fully buffered yet.");
-                }
-                if (!_completelyBuffered && origin == SeekOrigin.Current && offset + Position > Length)
-                {
-                    throw new NotSupportedException("The content has not been fully buffered yet.");
-                }
-                if (!_completelyBuffered && origin == SeekOrigin.Begin && offset > Length)
-                {
-                    throw new NotSupportedException("The content has not been fully buffered yet.");
-                }
-
-                return _buffer.Seek(offset, origin);
+                throw new NotSupportedException("The content has not been fully buffered yet.");
             }
-            return _innerStream.Seek(offset, origin);
+            if (!_completelyBuffered && origin == SeekOrigin.Current && offset + Position > Length)
+            {
+                throw new NotSupportedException("The content has not been fully buffered yet.");
+            }
+            if (!_completelyBuffered && origin == SeekOrigin.Begin && offset > Length)
+            {
+                throw new NotSupportedException("The content has not been fully buffered yet.");
+            }
+
+            return _buffer.Seek(offset, origin);
         }
 
         public override void SetLength(long value)
         {
             throw new NotSupportedException();
-        }
-
-        internal void DisableBuffering()
-        {
-            IsBuffering = false;
-            if (_buffer.Length > 0)
-                Flush();
-        }
-
-        internal Task DisableBufferingAsync(CancellationToken cancellation)
-        {
-            IsBuffering = false;
-            if (_buffer.Length > 0)
-                return FlushAsync(cancellation);
-            return Task.CompletedTask;
         }
 
         public override void Write(byte[] buffer, int offset, int count)
