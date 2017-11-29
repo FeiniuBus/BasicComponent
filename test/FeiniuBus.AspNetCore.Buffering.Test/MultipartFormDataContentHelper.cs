@@ -11,14 +11,12 @@ namespace FeiniuBus.AspNetCore.Buffering.Test
         {
             var multiPartContent = new MultipartFormDataContent("boundary=----FormBoundary7MA4YWxkTrZu0gW");
 
-            using (var fileStream = new FileStream(file, FileMode.Open, FileAccess.Read))
-            {
-                var streamContent = new StreamContent(fileStream);
-                streamContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
+            var fileStream = new FileStream(file, FileMode.Open, FileAccess.Read);
+            var streamContent = new StreamContent(fileStream);
+            streamContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
 
-                multiPartContent.Add(streamContent, "file",
-                    file.Substring(file.LastIndexOf("/", StringComparison.OrdinalIgnoreCase) + 1));
-            }
+            multiPartContent.Add(streamContent, "file",
+                file.Substring(file.LastIndexOf("/", StringComparison.OrdinalIgnoreCase) + 1));
 
             return multiPartContent;
         }
