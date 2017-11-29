@@ -22,6 +22,7 @@ namespace FeiniuBus.AspNetCore.Buffering.Test
             var hex = EncodeToString(value, true);
             
             Console.WriteLine(hex);
+            File.Delete(file);
             Assert.NotEmpty(hex);
         }
         
@@ -49,7 +50,7 @@ namespace FeiniuBus.AspNetCore.Buffering.Test
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), fileName);
 
             var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite, FileShare.Delete,
-                1024 * 16, FileOptions.Asynchronous | FileOptions.DeleteOnClose | FileOptions.SequentialScan);
+                1024 * 16, FileOptions.Asynchronous | FileOptions.SequentialScan);
             
             try
             {
