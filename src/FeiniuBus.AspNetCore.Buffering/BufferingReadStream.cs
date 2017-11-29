@@ -275,7 +275,7 @@ namespace FeiniuBus.AspNetCore.Buffering
                 Debug.Assert(_tempFileDirectory != null);
             }
 
-            TempFileName = Path.Combine(_tempFileDirectory, "ASPNETCORE_" + Guid.NewGuid().ToString() + ".tmp");
+            TempFileName = Path.Combine(_tempFileDirectory, "FEINIUBUS_" + Guid.NewGuid().ToString() + ".tmp");
             return new FileStream(TempFileName, FileMode.Create, FileAccess.ReadWrite, FileShare.Delete, 1024 * 16,
                 FileOptions.Asynchronous | FileOptions.DeleteOnClose | FileOptions.SequentialScan);
         }
