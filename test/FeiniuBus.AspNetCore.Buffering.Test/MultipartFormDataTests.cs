@@ -3,9 +3,14 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.InteropServices.ComTypes;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.TestHost;
 using Xunit;
 
 namespace FeiniuBus.AspNetCore.Buffering.Test
@@ -16,14 +21,29 @@ namespace FeiniuBus.AspNetCore.Buffering.Test
         public async Task BufferRequest_MultipartFormData()
         {
             var file  = await DownloadFileAsync().ConfigureAwait(false);
-            var md5 = MD5.Create();
-            var fileStream = new FileStream(file, FileMode.Open, FileAccess.Read);
-            var value = md5.ComputeHash(fileStream);
-            var hex = EncodeToString(value, true);
+            var builder = new WebHostBuilder().Configure(app =>
+            {
+                app.UseRequestBuffering();
+                app.Run(async context =>
+                {
+                    Assert.True(context.Request.Form.Files.Count > 0);
+                    var formFile = context.Request.Form.Files[0];
+
+                    var stream = formFile.OpenReadStream();
+                    var md5 = MD5.Create();
+                    var value = md5.ComputeHash(stream);
+                    
+                    Assert.Equal("d58961deae3c8ce8b6a9601c0936b0d1", EncodeToString(value, true));
+                    await context.Response.WriteAsync("OK");
+                });
+            });
+
+            var server = new TestServer(builder);
+            var content = MultipartFormDataContentHelper.MultipartFormDataContent(file);
+            var resp = await server.CreateClient().PostAsync("", content);
+            resp.EnsureSuccessStatusCode();
             
-            Console.WriteLine(hex);
             File.Delete(file);
-            Assert.NotEmpty(hex);
         }
         
         private static string EncodeToString(byte[] data, bool lowercase)
