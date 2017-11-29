@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Buffers;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -113,10 +114,12 @@ namespace FeiniuBus.AspNetCore.Buffering
             ThrowIfDisposed();
             if (_buffer.Position < _buffer.Length || _completelyBuffered)
             {
+                // Just read from the buffer
                 return _buffer.Read(buffer, offset, (int) Math.Min(count, _buffer.Length - _buffer.Position));
             }
 
             int read = _innerStream.Read(buffer, offset, count);
+
             if (_bufferLimit.HasValue && _bufferLimit - read < _buffer.Length)
             {
                 Dispose();
@@ -138,12 +141,11 @@ namespace FeiniuBus.AspNetCore.Buffering
                         _buffer.Write(rentedBuffer, 0, copyRead);
                         copyRead = oldBuffer.Read(rentedBuffer, 0, rentedBuffer.Length);
                     }
-
                     _bytePool.Return(rentedBuffer);
                 }
                 else
                 {
-                    _buffer.Write(_rentedBuffer, 0, (int) oldBuffer.Length);
+                    _buffer.Write(_rentedBuffer, 0, (int)oldBuffer.Length);
                     _bytePool.Return(_rentedBuffer);
                     _rentedBuffer = null;
                 }
@@ -166,11 +168,13 @@ namespace FeiniuBus.AspNetCore.Buffering
             ThrowIfDisposed();
             if (_buffer.Position < _buffer.Length || _completelyBuffered)
             {
+                // Just read from the buffer
                 return await _buffer.ReadAsync(buffer, offset, (int) Math.Min(count, _buffer.Length - _buffer.Position),
                     cancellationToken);
             }
 
             int read = await _innerStream.ReadAsync(buffer, offset, count, cancellationToken);
+
             if (_bufferLimit.HasValue && _bufferLimit - read < _buffer.Length)
             {
                 Dispose();
@@ -197,7 +201,7 @@ namespace FeiniuBus.AspNetCore.Buffering
                 }
                 else
                 {
-                    await _buffer.WriteAsync(buffer, offset, read, cancellationToken);
+                    await _buffer.WriteAsync(_rentedBuffer, 0, (int)oldBuffer.Length, cancellationToken);
                     _bytePool.Return(_rentedBuffer);
                     _rentedBuffer = null;
                 }
@@ -265,9 +269,13 @@ namespace FeiniuBus.AspNetCore.Buffering
         private Stream CreateTempFile()
         {
             if (_tempFileDirectory == null)
+            {
+                Debug.Assert(_tempFileDirectoryAccessor != null);
                 _tempFileDirectory = _tempFileDirectoryAccessor();
+                Debug.Assert(_tempFileDirectory != null);
+            }
 
-            TempFileName = Path.Combine(_tempFileDirectory, "FEINIUBUS_" + Guid.NewGuid() + ".tmp");
+            TempFileName = Path.Combine(_tempFileDirectory, "ASPNETCORE_" + Guid.NewGuid().ToString() + ".tmp");
             return new FileStream(TempFileName, FileMode.Create, FileAccess.ReadWrite, FileShare.Delete, 1024 * 16,
                 FileOptions.Asynchronous | FileOptions.DeleteOnClose | FileOptions.SequentialScan);
         }
