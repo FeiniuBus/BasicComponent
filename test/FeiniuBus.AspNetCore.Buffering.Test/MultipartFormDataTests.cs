@@ -49,7 +49,7 @@ namespace FeiniuBus.AspNetCore.Buffering.Test
             var fileName = url.Substring(url.LastIndexOf("/", StringComparison.OrdinalIgnoreCase) + 1);
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), fileName);
 
-            var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite, FileShare.Delete,
+            var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None,
                 1024 * 16, FileOptions.Asynchronous | FileOptions.SequentialScan);
             
             try
@@ -77,7 +77,7 @@ namespace FeiniuBus.AspNetCore.Buffering.Test
             finally
             {
                 await fileStream.FlushAsync();
-                fileStream.Dispose();
+                fileStream.Close();
                 stream.Dispose();
             }
         }
